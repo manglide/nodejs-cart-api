@@ -1,4 +1,4 @@
-var db = connect('127.0.0.1:27017/cart');
+var db = connect('mongodb+srv://desire:OI9PR1QIRDYBiYPB@brandsng-k5x55.mongodb.net/cart?retryWrites=true&w=majority');
 var c;
 for (c = 1; c <= 100; c++) {
   db.shop.insert({
