@@ -11,8 +11,8 @@ exports.options = {
       url: 'https://swagger.io',
       description: 'Find more info here'
     },
-    host: 'https://nodejs-rest-cart-api.herokuapp.com',
-    schemes: ['http'],
+    host: 'nodejs-rest-cart-api.herokuapp.com',
+    schemes: ['https'],
     consumes: ['application/json'],
     produces: ['application/json']
   }
