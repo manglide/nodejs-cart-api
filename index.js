@@ -15,7 +15,7 @@ const swagger = require('./config/swagger')
 fastify.register(require('fastify-swagger'), swagger.options)
 
 // Connect to DB
-mongoose.connect('mongodb+srv://desire:OI9PR1QIRDYBiYPB@brandsng-k5x55.mongodb.net/cart?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://<USERNAME>:<PASSWORD>@brandsng-k5x55.mongodb.net/cart?retryWrites=true&w=majority')
  .then(() => console.log('MongoDB connected…'))
  .catch(err => console.log(err))
 
