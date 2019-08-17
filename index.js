@@ -26,7 +26,7 @@ routes.forEach((route, index) => {
 })
 
 // Initiate Concurrency
-var WORKERS = process.env.WEB_CONCURRENCY || 1;
+var WORKERS = process.env.WEB_CONCURRENCY || 4;
 
 // Run the server!
 const start = async () => {
