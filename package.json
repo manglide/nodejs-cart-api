@@ -1,0 +1,35 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "A NodeJS Powered Cart API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/nodemon/bin/nodemon.js ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manglide/nodejs-cart-api.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "fastify",
+    "mongodb",
+    "rest-api",
+    "e-commerce"
+  ],
+  "author": "Adeyemi Salau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manglide/nodejs-cart-api/issues"
+  },
+  "homepage": "https://github.com/manglide/nodejs-cart-api#readme",
+  "dependencies": {
+    "boom": "^7.3.0",
+    "fastify": "^2.7.1",
+    "fastify-swagger": "^2.4.0",
+    "mongoose": "^5.6.9",
+    "nodemon": "^1.19.1"
+  }
+}
