@@ -8,6 +8,8 @@ const mongoose = require('mongoose')
 
 const routes = require('./routes')
 
+const throng = require('throng');
+
 // Import Swagger Options
 const swagger = require('./config/swagger')
 
@@ -23,6 +25,9 @@ routes.forEach((route, index) => {
  fastify.route(route)
 })
 
+// Initiate Concurrency
+var WORKERS = process.env.WEB_CONCURRENCY || 1;
+
 // Run the server!
 const start = async () => {
   try {
@@ -34,4 +39,7 @@ const start = async () => {
     process.exit(1)
   }
 }
-start()
+throng({
+  workers: WORKERS,
+  lifetime: Infinity
+}, start);
