@@ -4,7 +4,7 @@ For Documentation, please see https://nodejs-rest-cart-api.herokuapp.com/documen
 
 You can additionally run the tests via this postman collection:- https://documenter.getpostman.com/view/2077548/SVfGzCMC
 
-For Concurrency and Benchmarking, please see https://nodejs-rest-cart-api.herokuapp.com/benchmarking
+For Concurrency and Benchmarking, please see https://nodejs-rest-cart-api.herokuapp.com/benchmarking this is done so as to help non technical users visualize.
 
 This app uses the free 500MB offered by https://cloud.mongodb.com , Heroku's mLab is no longer receiving Sign Ups. See https://www.mongodb.com/atlas-signup-from-mlab
 
