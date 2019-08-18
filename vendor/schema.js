@@ -1,7 +1,12 @@
-var db = connect('mongodb+srv://desire:OI9PR1QIRDYBiYPB@brandsng-k5x55.mongodb.net/cart?retryWrites=true&w=majority');
+// Using a local Mongo Instance
+// Connection String is localhost:27017 provided Mongo is Running on Port 27017
+// var db = connect('mongodb+srv://desire:OI9PR1QIRDYBiYPB@brandsng-k5x55.mongodb.net/gas?retryWrites=true&w=majority');
+var PORT = 27017
+var DB = cart
+var db = connect('mongodb://localhost:' + PORT + '/' + DB);
 var c;
 for (c = 1; c <= 100; c++) {
-  db.shop.insert({
+  db.cart.insert({
      status:'active',
      quantity: c,
      subtotal: 5300,
@@ -31,4 +36,4 @@ for (c = 1; c <= 100; c++) {
 }
 
 //set a reference to all documents in the database
-store = db.shop.find();
+store = db.cart.find();

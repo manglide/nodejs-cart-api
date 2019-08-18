@@ -104,8 +104,7 @@
             $("#loadtxt").empty()
     	    },
     			error:function(response){
-    				console.log(response)
-            $(".result").empty().html(response)
+            $(".result").empty().html(response.StatusText)
             var load = document.getElementById("load")
             $(load).removeClass("spinner-border")
     			}

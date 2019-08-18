@@ -45,7 +45,7 @@ var jQuery = require("jquery");
 // async/await
 function benchMark (c, p, d) {
   const result = autocannon({
-    url: 'https://nodejs-rest-cart-api.herokuapp.com/api/carts',
+    url: 'http://nodejs-rest-cart-api.herokuapp.com/api/carts',
     connections: c, //default
     pipelining: p, // default
     duration: d // default
