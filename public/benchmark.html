@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BenchMark Page</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    Object.defineProperty(Number.prototype,'fileSize',{value:function(a,b,c,d){
+     return (a=a?[1e3,'k','B']:[1024,'K','iB'],b=Math,c=b.log,
+     d=c(this)/c(a[0])|0,this/b.pow(a[0],d)).toFixed(2)
+     +' '+(d?(a[1]+'MGTPEZY')[--d]+a[2]:'Bytes');
+    },writable:false,enumerable:false});
+    function asMs (stat) {
+      const result = Object.create(null)
+      Object.keys(stat).forEach((k) => {
+        result[k] = `${stat[k]} ms`
+      })
+      result.max = typeof stat.max === 'string' ? stat.max : `${Math.floor(stat.max * 100) / 100} ms`
+      return result
+    }
+    function asLowRow (name, stat) {
+      var j = typeof stat.max === 'string' ? stat.max : Math.floor(stat.max * 100) / 100
+      return "<tr><td>"+name+"</td><td>"+stat.p2_5+"</td><td>"+stat.p50+"</td><td>"+stat.p97_5+"</td><td>"+stat.p99+"</td><td>"+stat.average+"</td><td>"+stat.stddev+"</td><td>"+j+"</td></tr>"
+    }
+    function asHighRow (name, stat) {
+      var x = typeof stat.min === 'string' ? stat.min : Math.floor(stat.min * 100) / 100
+      return "<tr><td>"+name+"</td><td>"+stat.p1+"</td><td>"+stat.p2_5+"</td><td>"+stat.p50+"</td><td>"+stat.p97_5+"</td><td>"+stat.average+"</td><td>"+stat.stddev+"</td><td>"+x+"</td></tr>"
+    }
+    function asBytes (stat) {
+      const result = Object.create(stat)
+      const percentiles = [
+        0.001,
+        0.01,
+        0.1,
+        1,
+        2.5,
+        10,
+        25,
+        50,
+        75,
+        90,
+        97.5,
+        99,
+        99.9,
+        99.99,
+        99.999
+      ];
+      percentiles.forEach((p) => {
+        const key = `p${p}`.replace('.', '_')
+        result[key] = (stat[key]).fileSize()
+      })
+      result.average = (stat.average).fileSize()
+      result.stddev = (stat.stddev).fileSize()
+      result.max = (stat.max).fileSize()
+      result.min = (stat.min).fileSize()
+      return result
+    }
+    $(".btn-success").click(function(){
+      var load = document.getElementById("load")
+      $(load).addClass('spinner-border')
+      var c = document.getElementById("connections")
+      c = $(c).val()
+      var p = document.getElementById("pipelines")
+      p = $(p).val()
+      var d = document.getElementById("duration")
+      d = $(d).val()
+      $("#loadtxt").empty().append("<div class='text-danger'>Running benchmarks with C:"+c+", P: "+p+", and D: "+d+"</div>")
+      $(".result").empty()
+      $.ajax({
+	        url: '/benchmark',
+          data: {c:c,p:p,d:d},
+    			type: 'POST',
+    			before: function() {
+              var load = document.getElementById("load")
+    			    $(load).addClass('spinner-border')
+    		  },
+    	    success: function(response){
+            var g = asMs(response.latency)
+            var b = asBytes(response.throughput)
+            var row = asLowRow('<strong>Latency</strong>', g)
+            var row1 = asHighRow('<strong>Req/Sec</strong>', response.requests)
+            var row2 = asHighRow('<strong>Bytes/Sec</strong>', b)
+            var load = document.getElementById("load")
+            $(load).removeClass("spinner-border").empty()
+            var table = "<table class='table table-bordered'>"
+            table += "<thead><tr><th>Stat</th><th>2.5%</th><th>50%</th><th>97.5%</th><th>99%</th><th>Avg</th><th>Stdev</th><th>Max</th></tr></thead>"
+            table += "<tbody>"
+            table += row
+            table += "</tbody>"
+            table += "</table>"
+            table += "<br /><hr />"
+            table += "<table class='table table-bordered'>"
+            table += "<thead><tr><th>Stat</th><th>1%</th><th>2.5%</th><th>50%</th><th>97.5%</th><th>Avg</th><th>Stdev</th><th>Min</th></tr></thead>"
+            table += "<tbody>"
+            table += row1
+            table += row2
+            table += "</tbody>"
+            table += "</tbody>"
+            table += "</table>"
+            $(".result").empty().html(table)
+            $("#loadtxt").empty()
+    	    },
+    			error:function(response){
+    				console.log(response)
+            $(".result").empty().html(response)
+            var load = document.getElementById("load")
+            $(load).removeClass("spinner-border")
+    			}
+	    });
+    })
+  })
+</script>
+</head>
+<body>
+<div class="jumbotron">
+  <p>Note: Benchmarking Tests uses Node JS <a href="https://github.com/mcollina/autocannon">autocannon</a> A HTTP/1.1 benchmarking tool written in node. Default values are <br />
+    <div class="text-danger">Defaults are:- C - 10; P - 1; D - 10;</div> where C is the number of Concurrent connections; P is the number of pipelines and D is the duration of seconds.
+    <div class="text-danger">Please Note:- Application has been deployed on a free Heroku Dyno and has limitations as to the number of Concurrency Workers.</div> Please See the defaults table <a href="https://devcenter.heroku.com/articles/node-concurrency#defaults">here</a>.
+  </p>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-auto"><button class="btn btn-success" type="button">Click Me to Benchmark</button></div>
+      <div class="col">
+            <div class="form-group">
+              <label for="connections">C:</label>
+              <input type="number" name="connections" value="10" max="100" id="connections" />
+              <label for="pipelines">P:</label>
+              <input type="number" name="pipelines" value="1" max="20" id="pipelines" />
+              <label for="duration">D:</label>
+              <input type="number" name="duration" value="10" max="100" id="duration" />
+            </div>
+      </div>
+    </div>
+  </div>
+  <br /><hr />
+  <div id="load"></div>
+  <div id="loadtxt"></div>
+  <div class="result"></div>
+</div>
+</body>
+</html>
